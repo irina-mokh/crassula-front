@@ -4,8 +4,34 @@ import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { useEffect } from 'react';
+import { axiosClient } from '@/utils/axios';
 
+type AccessType = {
+  accessToken?: string;
+  refreshToken?: string;
+}
 export default function HomeScreen() {
+  const data = {
+    email: process.env.EXPO_PUBLIC_EMAIL,
+    password: process.env.EXPO_PUBLIC_PASS,
+  }
+
+
+  let cred: AccessType = {};
+  async function signup (){
+    // register - create user
+    const res = await axiosClient.post('/auth/signup', data);
+  };
+
+  async function login (){
+    const res = await axiosClient.post('/auth/login', data);
+    cred = res.data;
+  };
+  useEffect(() =>{
+    signup().then(() => login());
+  },[]);
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
@@ -19,6 +45,7 @@ export default function HomeScreen() {
         <ThemedText type="title">Welcome!</ThemedText>
         <HelloWave />
       </ThemedView>
+      {cred && <ThemedText type="subtitle">Token: {cred.accessToken}</ThemedText>}
       <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Step 1: Try it</ThemedText>
         <ThemedText>
