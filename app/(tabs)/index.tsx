@@ -6,6 +6,8 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useEffect } from 'react';
 import { axiosClient } from '@/utils/axios';
+import { Asset } from '@/components/Asset';
+import { AddBtn } from '@/components/AddBtn';
 
 type AccessType = {
   accessToken?: string;
@@ -16,7 +18,6 @@ export default function HomeScreen() {
     email: process.env.EXPO_PUBLIC_EMAIL,
     password: process.env.EXPO_PUBLIC_PASS,
   }
-
 
   let cred: AccessType = {};
   async function signup (){
@@ -33,48 +34,30 @@ export default function HomeScreen() {
   },[]);
 
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
+    <>
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Welcome!</ThemedText>
         <HelloWave />
       </ThemedView>
-      {cred && <ThemedText type="subtitle">Token: {cred.accessToken}</ThemedText>}
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
+      <ThemedView style={styles.section}>
+        <ThemedText type="subtitle">Token: {cred.accessToken}</ThemedText>
+        <ThemedText type="defaultSemiBold">incomes:</ThemedText>
+        {/* <Asset title="Food"></Asset> */}
+        <AddBtn type="in"></AddBtn>
       </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
+      <ThemedView style={styles.section}>
+        <ThemedText type="defaultSemiBold">assets:</ThemedText>
+        {/* <Asset title="Food"></Asset> */}
+        <AddBtn type="asset"></AddBtn>
       </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
+      <ThemedView style={styles.section}>
+        <ThemedText type="defaultSemiBold">expense:</ThemedText>
+        {/* <Asset title="Food"></Asset> */}
+        <AddBtn type="out"></AddBtn>
       </ThemedView>
-    </ParallaxScrollView>
-  );
+
+    </>
+  )
 }
 
 const styles = StyleSheet.create({
@@ -83,15 +66,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  section: {
+    paddingVertical: 4,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
+
 });
