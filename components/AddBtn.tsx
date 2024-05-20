@@ -30,6 +30,7 @@ export const AddBtn = ({type}: AddBtnProps) => {
 			userId: user.id,
 			type,
 		})
+		toggleModal();
 	}
 	return (
 		<>
