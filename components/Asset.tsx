@@ -1,3 +1,4 @@
+import { CategoryType, ICategory } from '@/app/types';
 import React, { useRef, useState } from 'react';
 import {Text, View, StyleSheet, PanResponder, Animated, } from 'react-native';
 
@@ -24,10 +25,8 @@ const styles = StyleSheet.create({
   }
 });
 
-type AssetProps = {
-	title?: string;
-}
-export const Asset = ({title}: AssetProps) => {
+interface AssetProps extends ICategory {}
+export const Asset = ({name }: AssetProps) => {
 
 
   // Create a ref to store the position of the card 
@@ -64,7 +63,7 @@ const panResponder = useRef(
       transform: position.getTranslateTransform(), 
       opacity: dragging ? 0.8 : 1, 
   },]} {...panResponder.panHandlers}>
-      <Text style={styles.title}>{title}</Text>
+      <Text style={styles.title}>{name}</Text>
       <Text style={styles.balance}>{100}</Text>
 
     </Animated.View>

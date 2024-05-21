@@ -6,6 +6,9 @@ import { ThemedView } from './ThemedView'
 import { ThemedText } from './ThemedText'
 import { useThemeColor } from '@/hooks/useThemeColor'
 import { axiosClient } from '@/utils/axios'
+import { useSelector } from 'react-redux'
+import { authSlice } from '@/app/store/auth/reducer'
+import { selectAuth } from '@/app/store/auth/selectors'
 
 
 type AddBtnProps = {
@@ -20,14 +23,15 @@ export const AddBtn = ({type}: AddBtnProps) => {
 		setIsAddModal(!isAddModal);
 	}
 
-	const user = JSON.parse(localStorage.getItem('user') || '');
+	const {user} = useSelector(selectAuth);
+
 	const [name, setName] = useState('');
 	const [balance, setBalance] = useState('');
 	const handleSubmit = () => {
 		axiosClient.post('category',{
 			name,
-			start: Number(balance),
-			userId: user.id,
+			start: Number(balance) || 0,
+			userId: user?.id,
 			type,
 		})
 		toggleModal();
@@ -42,7 +46,7 @@ export const AddBtn = ({type}: AddBtnProps) => {
 					title={`Create new ${type.toUpperCase()} category:`}>
 					<ThemedView>
 						<TextInput style={styles.input} placeholder="Asset name" onChangeText={setName}/>
-						<TextInput style={styles.input} placeholder="Start balance" onChangeText={setBalance} />
+						{type === 'asset' && <TextInput style={styles.input} placeholder="Start balance" onChangeText={setBalance} />}
 					</ThemedView>
 				</Popup>}
 		</>

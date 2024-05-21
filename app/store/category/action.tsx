@@ -57,7 +57,7 @@ export const deleteCategory = createAsyncThunk(
 
 export const getAllCategories = createAsyncThunk(
   'category/getAll',
-  async function (userId: number, { rejectWithValue }) {
+  async function (userId: string, { rejectWithValue }) {
     try {
       const response = await axiosClient.get(`category?userId=${userId}`);
       return response.data;
