@@ -17,12 +17,20 @@ const SECTIONS = {
 	out: 'expense'
 }
 export const AssetSection = ({type}: AssetSectionProps) => {
-	const { data: categories } = useSelector(selectCategory);
-	console.log(categories);
+	const { data } = useSelector(selectCategory);
 	return (
 		<ThemedView style={styles.section}>
-			<ThemedText type="defaultSemiBold">{SECTIONS[type]}:</ThemedText>
-				<FlatList horizontal data={categories.filter(cat => cat.type === type)}  renderItem={({item, index, separators}) => (
+			<ThemedText 
+				type="defaultSemiBold"
+				style={{marginBottom: 3}}>
+					{SECTIONS[type]}:
+				</ThemedText>
+				<FlatList 
+					horizontal
+					contentContainerStyle={{
+						alignItems: 'center', 
+						paddingBottom: 10}}
+					data={data.filter(cat => cat.type === type)}  renderItem={({item, index, separators}) => (
 					<Asset key={item.id} {...item}/>
 					)} ListFooterComponent={<AddBtn type={type}></AddBtn>}/>
 				
@@ -30,10 +38,9 @@ export const AssetSection = ({type}: AssetSectionProps) => {
 	)
 }
 
-
 const styles = StyleSheet.create({
   section: {
-    paddingVertical: 4,
+    paddingVertical: 7,
   },
 
 });

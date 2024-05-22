@@ -1,33 +1,30 @@
-import { CategoryType, ICategory } from '@/app/types';
+import { ICategory } from '@/app/types';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import React, { useRef, useState } from 'react';
-import {Text, View, StyleSheet, PanResponder, Animated, } from 'react-native';
+import { StyleSheet, PanResponder, Animated, } from 'react-native';
+import { ThemedText } from './ThemedText';
 
 const styles = StyleSheet.create({
   container: {
     width: 80,
     height: 80,
     padding: 2,
+    marginHorizontal: 5,
     flexDirection: 'column',
     justifyContent: 'space-evenly',
     alignItems: 'center',
     borderRadius: 50,
+    
     borderColor: '#73c1d7',
     borderWidth: 2,
     overflow: 'hidden',
   },
-  title: {
-    color: '#61dafb',
-    fontSize: 18,
-    fontWeight: 600,
-  },
-  balance: {
-    color: '#f0f0f0'
-  }
 });
 
 interface AssetProps extends ICategory {}
-export const Asset = ({name }: AssetProps) => {
-
+export const Asset = ({name, balance }: AssetProps) => {
+  const borderColor = useThemeColor({}, 'accent');
+	
 
   // Create a ref to store the position of the card 
   const position = 
@@ -59,12 +56,12 @@ const panResponder = useRef(
   ).current; 
 
   return (
-    <Animated.View style={[styles.container, { 
+    <Animated.View style={[styles.container, {        borderColor,
       transform: position.getTranslateTransform(), 
       opacity: dragging ? 0.8 : 1, 
   },]} {...panResponder.panHandlers}>
-      <Text style={styles.title}>{name}</Text>
-      <Text style={styles.balance}>{100}</Text>
+      <ThemedText>{name}</ThemedText>
+      <ThemedText>{balance}</ThemedText>
 
     </Animated.View>
   );

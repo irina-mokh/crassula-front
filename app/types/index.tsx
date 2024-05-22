@@ -17,7 +17,7 @@ export interface ICategory {
 	id: string;
   name: string;
   type: string;
-  start: number;
+  balance: number;
   userId: string;
 }
 export type ICreateCategory = Omit<ICategory, 'id'>;
