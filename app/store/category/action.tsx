@@ -34,19 +34,9 @@ export const editCategory = createAsyncThunk(
 
 export const deleteCategory = createAsyncThunk(
   'category/delete',
-  async function (id: number, { rejectWithValue, dispatch }) {
-
-    // delete all actions inside category
-    // const response: AnyAction = await dispatch(getActions(id));
-    // const actions = response.payload.data;
-    // actions.forEach((action: IAction) => {
-    //   if (action.id) {
-    //     dispatch(deleteAction(action.id));
-    //   }
-    // });
-
+  async function (id: string, { rejectWithValue }) {
     try {
-      await axiosClient.delete(url, { data: { id: id } });
+      await axiosClient.delete(url+'/'+id);
       return id;
     } catch (err) {
       console.log('Something went wrong ->', err);

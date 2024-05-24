@@ -12,7 +12,7 @@ export const Main = () => {
 	const dispatch: AppThunkDispatch = useDispatch();
   const { user } = useSelector(selectAuth);
 	useEffect(() =>{
-    dispatch(signup(loginData));
+    // dispatch(signup(loginData));
     // temp login
     dispatch(login(loginData));
   },[]);

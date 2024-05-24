@@ -1,30 +1,16 @@
 import { ICategory } from '@/app/types';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import React, { useRef, useState } from 'react';
-import { StyleSheet, PanResponder, Animated, } from 'react-native';
+import { StyleSheet, PanResponder, Animated, Pressable, } from 'react-native';
 import { ThemedText } from './ThemedText';
-
-const styles = StyleSheet.create({
-  container: {
-    width: 80,
-    height: 80,
-    padding: 2,
-    marginHorizontal: 5,
-    flexDirection: 'column',
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
-    borderRadius: 50,
-    
-    borderColor: '#73c1d7',
-    borderWidth: 2,
-    overflow: 'hidden',
-  },
-});
+import { AppThunkDispatch } from '@/app/store';
+import { useDispatch } from 'react-redux';
+import { deleteCategory } from '@/app/store/category/action';
 
 interface AssetProps extends ICategory {}
-export const Asset = ({name, balance }: AssetProps) => {
+export const Asset = ({name, balance, id }: AssetProps) => {
   const borderColor = useThemeColor({}, 'accent');
-	
+	const dispatch: AppThunkDispatch = useDispatch();
 
   // Create a ref to store the position of the card 
   const position = 
@@ -55,6 +41,9 @@ const panResponder = useRef(
     }) 
   ).current; 
 
+  const deleteAsset = () => {
+    dispatch(deleteCategory(id));
+  }
   return (
     <Animated.View style={[styles.container, {        borderColor,
       transform: position.getTranslateTransform(), 
@@ -62,8 +51,33 @@ const panResponder = useRef(
   },]} {...panResponder.panHandlers}>
       <ThemedText>{name}</ThemedText>
       <ThemedText>{balance}</ThemedText>
+      <Pressable style={styles.delete} onPress={deleteAsset}>
+        <ThemedText style={{fontSize: 10, lineHeight: 10, padding: 3}}>✖</ThemedText>
+        </Pressable>
 
     </Animated.View>
   );
 };
 
+
+const styles = StyleSheet.create({
+  container: {
+    position: 'relative',
+    width: 80,
+    height: 80,
+    padding: 2,
+    marginHorizontal: 10,
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    borderRadius: 50,
+    
+    borderColor: '#73c1d7',
+    borderWidth: 2,
+  },
+  delete: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+  }
+});
