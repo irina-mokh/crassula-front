@@ -5,10 +5,22 @@ import { useLocalSearchParams } from 'expo-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCategory } from '../store/category/selectors';
 import { FlatList } from 'react-native-gesture-handler';
+import { getCategory } from '../store/category/action';
+import { getActions } from '../store/action/actions';
+import { selectAction } from '../store/action/selectors';
+import { useEffect } from 'react';
+import { AppThunkDispatch } from '../store';
+import { actionSlice } from '../store/action/reducer';
 
 export default function Category() {
   const { id } = useLocalSearchParams();
-  const dispatch = useDispatch();
+  const dispatch: AppThunkDispatch = useDispatch();
+
+  useEffect( ()=> {
+    if (id && !Array.isArray(id)) dispatch(getActions(id));
+  }, [id]);
+
+  const actSlice = useSelector(selectAction);
   const catSlice = useSelector(selectCategory)
   const item = catSlice.data.filter((item) => item.id == id)[0];
   const { name, balance } = item;

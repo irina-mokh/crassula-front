@@ -48,28 +48,18 @@ export const editAction = createAsyncThunk(
 
 export const getActions = createAsyncThunk(
   'action/getAll',
-  async function (categoryId: number, { rejectWithValue }) {
-    const url = `action${categoryId > 0 ? '?catId=' + categoryId : ''}`;
-    try {
-      const response = await axiosClient.get(url);
-      return { data: response.data, catId: categoryId };
-    } catch (err) {
-      console.log('Something went wrong ->', err);
-      return rejectWithValue(err);
+  async function (categoryId: string, { rejectWithValue }) {
+    if (categoryId) {
+      const url = `action?catId=${categoryId}`;
+      try {
+        const response = await axiosClient.get(url);
+        return response.data;
+      } catch (err) {
+        console.log('Something went wrong ->', err);
+        return rejectWithValue(err);
+      }
     }
   }
 );
 
-export const getAction = createAsyncThunk(
-  'action/get',
-  async function (id: number, { rejectWithValue }) {
-    try {
-      const response = await axiosClient.get(`action/${id}`);
-      return response.data;
-    } catch (err) {
-      console.log('Something went wrong ->', err);
-      return rejectWithValue(err);
-    }
-  }
-);
 

@@ -22,6 +22,7 @@ export const getCategory = createAsyncThunk(
   async function (id: string, { rejectWithValue }) {
     try {
       const response = await axiosClient.get(`category/${id}`);
+      console.log(response.data);
       return response.data;
     } catch (err) {
       console.log('Something went wrong ->', err);

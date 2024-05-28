@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { ICategoryState } from '@/app/types';
-import { createCategory, deleteCategory, getAllCategories } from './action';
+import { createCategory, deleteCategory, getAllCategories, getCategory } from './action';
 
 const initialState: ICategoryState = {
   data: [],

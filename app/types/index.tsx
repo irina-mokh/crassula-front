@@ -19,6 +19,7 @@ export interface ICategory {
   type: string;
   balance: number;
   userId: string;
+	actions: IAction[];
 }
 export type ICreateCategory = Omit<ICategory, 'id'>;
 

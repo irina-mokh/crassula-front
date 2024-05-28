@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { IActionState } from '@/app/types';
-import { createAction } from './actions';
+import { createAction, getActions } from './actions';
 
 const initialState: IActionState = {
   data: [],
@@ -23,6 +23,11 @@ export const actionSlice = createSlice({
       .addCase(createAction.rejected, (state, action) => {
         state.error = String(action.payload);
       })
+
+      .addCase(getActions.fulfilled, (state, action) => {
+        state.data = [...action.payload];
+      })
+      
 
   },
 });
