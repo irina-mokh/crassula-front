@@ -27,12 +27,15 @@ export const AssetSection = ({type}: AssetSectionProps) => {
 				</ThemedText>
 				<FlatList 
 					horizontal
-					contentContainerStyle={{
-						alignItems: 'center', 
-						paddingBottom: 10}}
+					style={{
+						overflow: 'visible',
+					}}
+					contentContainerStyle={styles.listContainer}
+			
 					data={data.filter(cat => cat.type === type)}  renderItem={({item, index, separators}) => (
 					<Asset key={item.id} {...item}/>
-					)} ListFooterComponent={<AddBtn type={type}></AddBtn>}/>
+					)}
+					ListFooterComponent={<AddBtn type={type}></AddBtn>}/>
 				
 		</ThemedView>
 	)
@@ -41,6 +44,14 @@ export const AssetSection = ({type}: AssetSectionProps) => {
 const styles = StyleSheet.create({
   section: {
     paddingVertical: 7,
+		overflow: 'visible',
   },
+	listContainer: {
+		flexDirection: 'row',
+    width: '100%',
+		flexWrap: 'wrap',
+		alignItems: 'center', 
+		gap: 10,
+	}
 
 });

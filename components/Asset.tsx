@@ -1,58 +1,82 @@
 import { ICategory } from '@/app/types';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import React, { useRef, useState } from 'react';
-import { StyleSheet, PanResponder, Animated, Pressable, } from 'react-native';
+import { StyleSheet, PanResponder, Animated, Pressable, LayoutAnimation, LayoutChangeEvent, LayoutRectangle, PanResponderGestureState, } from 'react-native';
 import { ThemedText } from './ThemedText';
 import { AppThunkDispatch } from '@/app/store';
 import { useDispatch } from 'react-redux';
 import { deleteCategory } from '@/app/store/category/action';
 import { Link } from 'expo-router';
 
+const SIZE = 80;
 interface AssetProps extends ICategory {}
 export const Asset = ({name, balance, id }: AssetProps) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  // const borderColor = isHovered ? useThemeColor({}, 'accent') : 'red';
   const borderColor = useThemeColor({}, 'accent');
+
+  const backgroundColor = useThemeColor({}, 'bgTint');
+
 	const dispatch: AppThunkDispatch = useDispatch();
+  const deleteAsset = () => {
+    dispatch(deleteCategory(id));
+  }
 
-  // Create a ref to store the position of the card 
-  const position = 
-  useRef(new Animated.ValueXY()).current; 
-
-// State to track if the card is being dragged 
-const [dragging, setDragging] = useState(false); 
-
-// Create a pan responder to handle touch events 
-const panResponder = useRef( 
-  PanResponder.create({ 
+  const pan = new Animated.ValueXY();
+  const panResponder = 
+    PanResponder.create({ 
       onStartShouldSetPanResponder: () => true, 
       onMoveShouldSetPanResponder: () => true, 
       onPanResponderGrant: () => { 
         // When touch gesture starts,  
         //set dragging to true 
-        setDragging(true); 
+        // setDragging(true); 
       }, 
       onPanResponderMove: Animated.event( 
-        [ null, { dx: position.x, dy: position.y, }], 
+        [ null, { dx: pan.x, dy: pan.y, }], 
         { useNativeDriver: false } 
       ),
-      onPanResponderRelease: () => {          
-        // When touch gesture is released,  
-        //set dragging to false 
-        setDragging(false); 
-      }, 
-    }) 
-  ).current; 
+      onPanResponderRelease: (e, gesture) => {
+        // console.log(e);
+        // console.log(gesture);
+        checkDropZone(gesture);
+        if(isHovered){ 
+          console.log('is drop zone');
+        }else{
+          Animated.spring(
+            pan,
+            {
+              toValue: { x: 0, y: 0 },
+              useNativeDriver: false
+            }
+          ).start();
+        }
+      }
+    }); 
 
-  const deleteAsset = () => {
-    dispatch(deleteCategory(id));
+  const [dz, setDropZone] = useState<LayoutRectangle>();
+  const setDropZoneValues = (event: LayoutChangeEvent) => {
+      setDropZone(event.nativeEvent.layout);
   }
+
+  const checkDropZone = (gesture: PanResponderGestureState) => {
+    if (dz) {
+      // console.log(dz);
+      const isOver = gesture.moveY > dz.y  && gesture.moveY < dz.y + dz.height
+      setIsHovered(isOver);
+    }
+}
   return (
     <Link href={{
       pathname: `category/${id}`,
     }}>
-      <Animated.View style={[styles.container, {borderColor,
-        transform: position.getTranslateTransform(), 
-        opacity: dragging ? 0.8 : 1, 
-    },]} {...panResponder.panHandlers}>
+      <Animated.View
+        onLayout={setDropZoneValues}
+        {...panResponder.panHandlers}
+        style={[pan.getLayout(), styles.container, 
+          {borderColor, backgroundColor}]}
+      >
         <ThemedText>{name}</ThemedText>
         <ThemedText>{balance}</ThemedText>
         <Pressable style={styles.delete} onPress={deleteAsset}>
@@ -68,16 +92,14 @@ const panResponder = useRef(
 const styles = StyleSheet.create({
   container: {
     position: 'relative',
-    width: 80,
-    height: 80,
+    width: SIZE,
+    height: SIZE,
     padding: 2,
     marginHorizontal: 10,
     flexDirection: 'column',
     justifyContent: 'space-evenly',
     alignItems: 'center',
     borderRadius: 50,
-    
-    borderColor: '#73c1d7',
     borderWidth: 2,
   },
   delete: {
